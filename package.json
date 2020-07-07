@@ -1,0 +1,21 @@
+{
+  "name": "assignment1",
+  "version": "1.0.0",
+  "description": "First assignment- practicing setting up a module",
+  "main": "index.js",
+  "dependencies": {},
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mguzman11/IT122.git"
+  },
+  "author": "Melissa Guzman",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/mguzman11/IT122/issues"
+  },
+  "homepage": "https://github.com/mguzman11/IT122#readme"
+}
