@@ -1,0 +1,47 @@
+/* General Styles */
+h1 {
+    margin: 0 auto;
+    text-align: center;
+    }
+
+h2 {
+    margin-left: .5em;
+    }
+
+li {
+    font-size: 2em;
+    width: 300px;
+    margin: .5em;
+    padding: .25em .5em;
+    list-style: none;
+    border: 1px solid black;
+    border-radius: 20px;
+    background-color: azure;
+    }
+
+a:link {
+    text-decoration: none;
+    }
+    
+a:visited {
+    text-decoration: none;
+    }
+    
+a:hover {
+    text-decoration: underline;
+    }
+    
+a:active {
+    text-decoration: underline;
+    }
+
+/* Details page specific styles */
+.info {
+    font-size: 1.5em;
+    }
+
+.home {
+    margin: .5em;
+    padding-top: 2em;
+    font-size: 1.5em;
+    }

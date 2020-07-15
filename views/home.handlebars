@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" /> 
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>Dogs Melissa Knows</title>
+    <link rel="stylesheet" type="text/css" href="./css/styles.css" />
+  </head>
+  <body>
+   <h1>Welcome to Dogs Melissa Knows</h1> 
+   <h2>Click on a dog to learn more about it</h2>
+    <ul>
+        {{#each dogs}}
+            <li><a href= "/detail?name={{name}}">{{name}}</a></li>
+        {{/each}}
+    </ul>
+  </body>
+</html>
