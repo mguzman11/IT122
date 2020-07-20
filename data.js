@@ -14,7 +14,32 @@ const getAll = () => {
 
 const getDetail = name => {
     const dog = dogs.find(dogs => dogs.name === name);
-    return dog;
+    if (dog===undefined){
+        return {"details": false, "msg":"Dog not found"};
+    }else{
+        return dog;
+    }
 }
 
-module.exports= {getAll, getDetail};
+const addDog= (name, breed, age, sex) =>{
+    if ([name, breed, age, sex].includes(undefined)){
+        return {"added":false, "msg":"Please complete all information before adding" };
+    }else{
+        const newDog={name: name, breed: breed, age: age, sex: sex};
+        dogs.push(newDog);
+        return newDog;
+    }
+}
+
+
+const delDog= name =>{
+    const delDog= dogs.findIndex(dogs => dogs.name === name)
+        if (delDog === -1){
+            return {"deleted":false, "msg":"That dog does not exist in the database"};
+        }else{
+            dogs.splice(delDog,1);
+            return {"deleted": true, "msg": `"${name}" removed`};
+        } 
+}
+
+module.exports= {getAll, getDetail, addDog, delDog};
