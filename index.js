@@ -18,9 +18,63 @@ app.set('port', process.env.PORT || 3000);
 app.use(express.static(__dirname + '/public' ));
 
 app.use(bodyParser.urlencoded({extended: true}));
+ // set Access-Control-Allow-Origin header for api route
+app.use(bodyParser.json());
 
+app.use('/api', require('cors')());
 
 //let displayDogs = dogs.getAll();
+
+app.get('/api/dogs', (req, res) => {
+  return Dog.find({}).lean()
+    .then((dogs) => {
+        // res.json sets appropriate status code and response header
+        res.json(dogs);
+    })
+    .catch(err => {return res.status(500).send('Error occurred: database error.')})
+
+  });
+
+  app.get('/api/dogs/:name', (req, res) => {
+    const dogname = req.params.name; 
+    Dog.findOne({name: dogname})
+    .then((dog) => {
+        if (dog === null) {
+            return res.status(400).send(`Error: "${dogname}" not found`)
+        } else {
+        res.json(dog)
+        }
+    })
+    .catch(err => {
+        res.status(500).send('Error occurred: dabatase error', err)
+    })
+});
+
+app.delete('/api/dogs/:name', (req, res) => {
+  const dogname = req.params.name; 
+  Dog.findOneAndDelete({name: dogname})
+  .then(dog => {
+      if(dog === null) {
+          return res.status(400).send(`Error: "${dogname}" not found`)   
+      } else {
+          res.json(dog)}
+  })
+
+  .catch(err => {
+      res.status(500).send('Error occurred: dabatase error', err)
+  })
+});
+
+app.post('/api/dogs/:name', (req, res) => {
+  const dogname = req.params.name;
+  Dog.findOneAndUpdate({name: dogname}, req.body, {upsert: true, new: true})
+  .then(dog => {
+      res.json(dog)
+  })
+  .catch(err => {
+      res.status(500).send('Error occurred: dabatase error', err)
+  })
+})
 
 app.get('/', (req, res, next) => {
   return Dog.find({}).lean()
