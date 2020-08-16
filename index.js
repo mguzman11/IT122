@@ -25,6 +25,15 @@ app.use('/api', require('cors')());
 
 //let displayDogs = dogs.getAll();
 
+app.get('/', (req, res, next) => {
+  return Dog.find({}).lean()
+      .then((dogs) => {
+          //res.render('home', { dogs });
+          res.render('home_react', {dogs: JSON.stringify(dogs)});
+      })
+      .catch(err => next(err));
+});
+
 app.get('/api/dogs', (req, res) => {
   return Dog.find({}).lean()
     .then((dogs) => {
@@ -75,14 +84,6 @@ app.post('/api/dogs/:name', (req, res) => {
       res.status(500).send('Error occurred: dabatase error', err)
   })
 })
-
-app.get('/', (req, res, next) => {
-  return Dog.find({}).lean()
-      .then((dogs) => {
-          res.render('home', { dogs });
-      })
-      .catch(err => next(err));
-});
 
 app.get('/detail', (req, res) => {
   const dogname = req.query.name;
