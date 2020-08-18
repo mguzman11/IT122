@@ -28,19 +28,34 @@ app.use('/api', require('cors')());
 app.get('/', (req, res, next) => {
   return Dog.find({}).lean()
       .then((dogs) => {
-          //res.render('home', { dogs });
           res.render('home_react', {dogs: JSON.stringify(dogs)});
       })
       .catch(err => next(err));
 });
 
-app.get('/api/dogs', (req, res) => {
+app.get('/delete', (req, res) => {
+  const dogname = req.query.name;
+  Dog.findOneAndDelete({name: dogname}, (err, dog) =>{
+    if (err){
+      console.log(err);
+    }else if (!dog) {
+      console.log(dogname + " notfound");
+      res.send(`${dogname} not found`);
+    }else if(dog){
+      console.log(dogname + " deleted");
+      res.send (`${dogname} deleted`)
+    }
+  });
+});
+
+  app.get('/api/dogs', (req, res) => {
   return Dog.find({}).lean()
     .then((dogs) => {
         // res.json sets appropriate status code and response header
         res.json(dogs);
     })
-    .catch(err => {return res.status(500).send('Error occurred: database error.')})
+    .catch(err => {
+      return res.status(500).send('Error occurred: database error.'), err})
 
   });
 
@@ -61,7 +76,7 @@ app.get('/api/dogs', (req, res) => {
 
 app.delete('/api/dogs/:name', (req, res) => {
   const dogname = req.params.name; 
-  Dog.findOneAndDelete({name: dogname})
+  Dog.findOneAndUpdate({name: dogname})
   .then(dog => {
       if(dog === null) {
           return res.status(400).send(`Error: "${dogname}" not found`)   
@@ -70,7 +85,7 @@ app.delete('/api/dogs/:name', (req, res) => {
   })
 
   .catch(err => {
-      res.status(500).send('Error occurred: dabatase error', err)
+      res.status(500).send(`Error occurred: dabatase error`, err)
   })
 });
 
@@ -83,7 +98,7 @@ app.post('/api/dogs/:name', (req, res) => {
   .catch(err => {
       res.status(500).send('Error occurred: dabatase error', err)
   })
-})
+});
 
 app.get('/detail', (req, res) => {
   const dogname = req.query.name;

@@ -26,7 +26,7 @@
         const DogDetails = props => {
         return (
             <div id="details">
-                <h2>Details for {props.current.dog || "Dog:"}</h2>               
+                <h2>Details for {props.current.name || "Dog"}</h2>               
                
                 <form>
                     Name: <input onChange={props.edit} type="text" name= "name" value={props.current.name || ""}  /><br/>
@@ -34,6 +34,9 @@
                     Age: <input onChange={props.edit} type="text" name= "age" value={props.current.age || ""}  /><br/>
                     Sex: <input onChange={props.edit} type="text" name= "sex" value={props.current.sex || ""} />
                 </form>
+                <button onClick={props.reset}>Clear</button>
+                <button onClick={props.delete}>Delete</button>
+                <div id="status"></div>
             </div>
         )
     }
@@ -45,23 +48,49 @@
             currentDog: { } 
           };
           this.selectItem = this.selectItem.bind(this);
+          this.resetCurrent = this.resetCurrent.bind(this);
+          this.handleDelete = this.handleDelete.bind(this);
        }
 
       selectItem(event) {
         event.preventDefault();
         const dog= this.state.dog.find(dog => event.target.text===dog.name);
         this.setState({currentDog: dog});
-        ReactDom.render(<h2></h2>, document.getElementById('details'));
+        /*
+        ReactDOM.render(<h2></h2>, document.getElementById('details'));
         console.log(event.target.innerText);
         console.log(this.state.currentDog);
         console.log(event.target.innerText);
+        */
       }
 
       handleEdit (event){
+        /*
         console.log(event.target.name)
         console.log(event.target.value)
+        */
         let newDog= this.state.currentDog;
         this.setState({currentDog: newDog});
+      }
+      
+    handleDelete(){
+      fetch(`/delete/${this.state.currentDog.name}`)
+      .then((response) =>{
+        console.log(response);
+      })
+        .then((result) =>{
+          this.setState({dog: [...this.state.dog.filter(dog => dog.name !==this.state.currentDog.name)]});
+          console.log(this.state.dog);
+          console.log(this.state.currentDog);
+          ReactDOM.render(<h2 id="done">"{this.state.currentDog.name}" Deleted</h2>,document.getElementById('status'));
+          this.resetCurrent();
+        })
+        .catch(err =>console.log(err))
+
+      }
+
+    resetCurrent() {
+          this.setState({currentDog: { } })
       }
     
       render() {
@@ -70,7 +99,9 @@
             <h1>Welcome to Dogs Melissa Knows</h1> 
             
             <Dog dog={this.state.dog} selected={event => this.selectItem(event)}/>
-            <DogDetails current={this.state.currentDog} />
+            <DogDetails current={this.state.currentDog} 
+              reset={() => this.resetCurrent()}
+              delete={this.handleDelete}/>
            
           </div>
           );
