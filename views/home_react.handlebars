@@ -16,18 +16,32 @@
           <div id="select">
               <h2>Select a dog to learn more about it</h2>
                   <ul>
-                  {props.dogArray.map((dog) => (
+                  {props.dog.map((dog) => (
                       <li key={dog._id}><a href="#" onClick={props.selected}>{dog.name}</a></li>
                   ))}
                   </ul> 
          </div>
-        ); 
-  
+        );
+    }
+        const DogDetails = props => {
+        return (
+            <div id="details">
+                <h2>Details for {props.current.dog || "Dog:"}</h2>               
+               
+                <form>
+                    Name: <input onChange={props.edit} type="text" name= "name" value={props.current.name || ""}  /><br/>
+                    Breed: <input onChange={props.edit} type="text" name= "breed" value={props.current.breed || ""}  /><br/>
+                    Age: <input onChange={props.edit} type="text" name= "age" value={props.current.age || ""}  /><br/>
+                    Sex: <input onChange={props.edit} type="text" name= "sex" value={props.current.sex || ""} />
+                </form>
+            </div>
+        )
+    }
     class App extends React.Component{
       constructor(props){
           super(props);
           this.state = {
-            dogs: {{{ dogs }}}, 
+            dog: {{{ dogs }}}, 
             currentDog: { } 
           };
           this.selectItem = this.selectItem.bind(this);
@@ -35,7 +49,19 @@
 
       selectItem(event) {
         event.preventDefault();
+        const dog= this.state.dog.find(dog => event.target.text===dog.name);
+        this.setState({currentDog: dog});
+        ReactDom.render(<h2></h2>, document.getElementById('details'));
         console.log(event.target.innerText);
+        console.log(this.state.currentDog);
+        console.log(event.target.innerText);
+      }
+
+      handleEdit (event){
+        console.log(event.target.name)
+        console.log(event.target.value)
+        let newDog= this.state.currentDog;
+        this.setState({currentDog: newDog});
       }
     
       render() {
@@ -43,7 +69,8 @@
             <div id="display">
             <h1>Welcome to Dogs Melissa Knows</h1> 
             
-            <Dog dogArray={this.state.dog} selected={event => this.selectItem(event)}/>
+            <Dog dog={this.state.dog} selected={event => this.selectItem(event)}/>
+            <DogDetails current={this.state.currentDog} />
            
           </div>
           );
